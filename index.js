@@ -7,12 +7,15 @@ const fs = require('fs');
 let stuff = [];
 
 grabImage = (url) => {
-	let $ = cheerio.load(url);
-	let imgContainer = $("img.media-element");
+	request(url, function(error, response, html) {
+		if (!error && response.status == 200) {
+		let $ = cheerio.load(html);
+	let imgContainer = $(this).prev();
 	console.log(imgContainer);
+	}})
 }
 
-scrapeSub = (URL) => {
+scrapeSub = () => {
 	request('https://www.reddit.com/r/4chan', function (error, response, html) {
   if (!error && response.statusCode == 200) {
     var $ = cheerio.load(html);
@@ -37,7 +40,7 @@ scrapeSub = (URL) => {
 }})};
 
 
-scrapeSub('http://www.reddit.com/r/4chan')
+scrapeSub()
 
 //find out how to download images from i.reddit
 
