@@ -18,6 +18,7 @@ grabImage = (url) => {
 	})
 }
 
+//need to remove index 0 of the array
 
 //this function takes in a url as a string, a file path as a string, and a callback function
 /*
