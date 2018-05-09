@@ -9,11 +9,12 @@ let stuff = [];
 
 grabImage = (url) => {
 	request(url, function (error, response, html) {
+		console.log('this is the url******* ',url)
 		if (!error && response.status == 200) {
 			let $ = cheerio.load(html);
 			//sets img equal to div parent of image then goes to div below
 			let img = $('div.media-preview-content').next();
-			console.log(img);
+			//console.log(img);
 		}
 	})
 }
@@ -34,6 +35,7 @@ scrapeSub = () => {
 	request('https://www.reddit.com/r/4chan', function (error, response, html) {
 		if (!error && response.statusCode == 200) {
 			let $ = cheerio.load(html);
+			console.log($.children)
 			$('span.domain').each(function (i, element) {
 				// Select the previous element
 				var a = $(this).prev();
@@ -49,11 +51,14 @@ scrapeSub = () => {
 				}
 				grabImage(link);
 			})
-			console.log(stuff);
+			//console.log(stuff);
 		}
-	})
+		stuff.map(url => request(url, function(err, response, html){
+			let $  = cheerio.load(html)
+		response.pipe(process.stdout).on('input', console.log(response))
+		})
+	)})
 };
-
 
 scrapeSub()
 
