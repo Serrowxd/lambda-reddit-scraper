@@ -1,0 +1,30 @@
+{
+  "name": "lambda-reddit-scraper",
+  "version": "1.0.0",
+  "description": "A simple reddit scraper made in node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Jared Cooper",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "nodemon": "^1.17.4",
+    "request": "^2.85.0",
+    "validator-js": "^0.2.1"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaredRCooper/lambda-reddit-scraper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JaredRCooper/lambda-reddit-scraper/issues"
+  },
+  "homepage": "https://github.com/JaredRCooper/lambda-reddit-scraper#readme"
+}
