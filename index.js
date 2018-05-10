@@ -1,7 +1,7 @@
+//dependencies 
 const request = require('request');
 const cheerio = require('cheerio');
-//const validator = require('validator-js');
-//built in node module that allows you to save and write files
+const download = require('image-downloader');
 const fs = require('fs');
 const path = require('path');
 //pussypassdenied, 4chan, greentext, dankmemes
@@ -17,32 +17,44 @@ const download = (uri, filename, callback) => {
   };
   */
 
-const grabImage = (url) => {
-	request(url, function (error, response, html) {
-		//if (!error && response.status == 200) {
-			console.log('this is IMGUR LINK!', url);
-			//we have to differentiate between imgur link, and imgur page
-		})
+const grabImage = (link) => {
+	console.log('this is IMGUR LINK!', link);
+	const options = {
+		url: `${link}`,
+		dest: '/images_scraped/'
 	}
+	download.image(options)
+		.then(({
+			filename,
+			image
+		}) => {
+			console.log('Saving file to', filename)
+		}).catch((err) => {
+			throw err
+		})
+
+}
 
 const grabImgurPage = (url) => [
-	request(url, function(error, response, html) {
+	request(url, function (error, response, html) {
 		//if (!error && response.status == 200) {
-			console.log('this is IMGUR PAGE LINKE!', url);
-			let $ = cheerio.load(html);
-		})
+		console.log('this is IMGUR PAGE LINKE!', url);
+		let $ = cheerio.load(html);
+		let img = $('.zoom').attr('href');
+
+	})
 ]
 
 const grabReddit = (url) => {
 	request(url, function (error, response, html) {
 		//if (!error && response.status == 200) {
-			console.log('this is REDDIT LINK!',url)
-			let $ = cheerio.load(html);
-			//sets img equal to div parent of image then goes to div below
-			let img = $('.media-preview-content').next().attr('href');
-			
-		})
-	}
+		console.log('this is REDDIT LINK!', url)
+		let $ = cheerio.load(html);
+		//sets img equal to div parent of image then goes to div below
+		let img = $('.media-preview-content').next().attr('href');
+
+	})
+}
 
 
 //need to remove index 0 of the array
@@ -80,15 +92,15 @@ scrapeSub = () => {
 				} else {
 					grabImgurPage(link);
 				}
-				
+
 			})
 			//console.log(urlArray);
 		}
-	//	urlArray.map(url => request(url, function(err, response, html){
+		//	urlArray.map(url => request(url, function(err, response, html){
 		//	let $  = cheerio.load(html)
 		//response.pipe(process.stdout).on('input', console.log(response))
-		})
-//	)})
+	})
+	//	)})
 };
 
 scrapeSub()
