@@ -18,7 +18,7 @@ const download = (uri, filename, callback) => {
   */
 
 const grabImage = (link) => {
-	console.log('this is IMGUR LINK!', link);
+	console.log('this is a IMGUR LINK!', link);
 	const options = {
 		url: `${link}`,
 		dest: '/images_scraped/'
@@ -30,29 +30,41 @@ const grabImage = (link) => {
 		}) => {
 			console.log('Saving file to', filename)
 		}).catch((err) => {
-			throw err
+			console.log(err);
 		})
 
 }
 
-const grabImgurPage = (url) => [
-	request(url, function (error, response, html) {
+const grabImgurPage = (link) => [
+	request(link, function (error, response, html) {
 		//if (!error && response.status == 200) {
-		console.log('this is IMGUR PAGE LINKE!', url);
+		console.log('this is a IMGUR PAGE LINK!', link);
 		let $ = cheerio.load(html);
 		let img = $('.zoom').attr('href');
-
+		const options = {
+			url: `${link}`,
+			dest: '/images_scraped/'
+		}
+		download.image(options)
+			.then(({
+				filename,
+				image
+			}) => {
+				console.log('Saving file to', filename)
+			}).catch((err) => {
+				console.log(err);
+			})
 	})
 ]
 
-const grabReddit = (url) => {
-	request(url, function (error, response, html) {
+const grabReddit = (link) => {
+	request(link, function (error, response, html) {
 		//if (!error && response.status == 200) {
-		console.log('this is REDDIT LINK!', url)
+		console.log('this is a REDDIT LINK!', link)
 		let $ = cheerio.load(html);
 		//sets img equal to div parent of image then goes to div below
-		let img = $('.media-preview-content').next().attr('href');
-
+		let img = $('.media-preview-content');
+		console.log('!!!!!!!' + img + '!!!!!!!!');
 	})
 }
 
