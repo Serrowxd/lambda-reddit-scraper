@@ -5,8 +5,8 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 //pussypassdenied, 4chan, greentext, dankmemes
-let stuff = [];
-
+let urlArray = [];
+/*
 const download = (uri, filename, callback) => {
 	request.head(uri, function(err, res, body){
 	  console.log('content-type:', res.headers['content-type']);
@@ -15,27 +15,27 @@ const download = (uri, filename, callback) => {
 	  request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
 	});
   };
-  
+  */
 
 const grabImage = (url) => {
 	request(url, function (error, response, html) {
-		console.log('this is IMGUR LINK!', url);
 		if (!error && response.status == 200) {
-			console.log('no error');
+			console.log('this is IMGUR LINK!', url);
+			let $ = cheerio.load(html);
+			let imgurImage
+			//we have to differentiate between imgur link, and imgur page
 		}
 	})
 }
 
 const grabReddit = (url) => {
 	request(url, function (error, response, html) {
-		console.log('this is REDDIT LINK!',url)
 		if (!error && response.status == 200) {
+			console.log('this is REDDIT LINK!',url)
 			let $ = cheerio.load(html);
 			//sets img equal to div parent of image then goes to div below
 			let img = $('.media-preview-content').next().attr('href');
-			download('img', 'google.png', function(){
-  console.log('done');
-});
+			
 		}
 	})
 }
@@ -64,10 +64,10 @@ scrapeSub = () => {
 				let url = a.attr('href');
 				let pattern = new RegExp(/\/r\//)
 				if (pattern.test(url)) url = 'https://reddit.com' + url;
-				stuff.push( /*title + ' ' +*/ url);
+				urlArray.push( /*title + ' ' +*/ url);
 			})
 			//map over the array of links and pass each into a link variable
-			stuff.map(link => {
+			urlArray.map(link => {
 				if (link.includes('reddit.com')) {
 					grabReddit(link);
 				} else {
@@ -75,13 +75,13 @@ scrapeSub = () => {
 				}
 				
 			})
-			//console.log(stuff);
+			//console.log(urlArray);
 		}
-		stuff.map(url => request(url, function(err, response, html){
-			let $  = cheerio.load(html)
+	//	urlArray.map(url => request(url, function(err, response, html){
+		//	let $  = cheerio.load(html)
 		//response.pipe(process.stdout).on('input', console.log(response))
 		})
-	)})
+//	)})
 };
 
 scrapeSub()
