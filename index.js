@@ -7,14 +7,35 @@ const path = require('path');
 //pussypassdenied, 4chan, greentext, dankmemes
 let stuff = [];
 
-grabImage = (url) => {
+const download = (uri, filename, callback) => {
+	request.head(uri, function(err, res, body){
+	  console.log('content-type:', res.headers['content-type']);
+	  console.log('content-length:', res.headers['content-length']);
+  
+	  request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+	});
+  };
+  
+
+const grabImage = (url) => {
 	request(url, function (error, response, html) {
-		console.log('this is the url******* ',url)
+		console.log('this is IMGUR LINK!', url);
+		if (!error && response.status == 200) {
+			console.log('no error');
+		}
+	})
+}
+
+const grabReddit = (url) => {
+	request(url, function (error, response, html) {
+		console.log('this is REDDIT LINK!',url)
 		if (!error && response.status == 200) {
 			let $ = cheerio.load(html);
 			//sets img equal to div parent of image then goes to div below
-			let img = $('div.media-preview-content').next();
-			//console.log(img);
+			let img = $('.media-preview-content').next().attr('href');
+			download('img', 'google.png', function(){
+  console.log('done');
+});
 		}
 	})
 }
@@ -35,12 +56,12 @@ scrapeSub = () => {
 	request('https://www.reddit.com/r/4chan', function (error, response, html) {
 		if (!error && response.statusCode == 200) {
 			let $ = cheerio.load(html);
-			console.log($.children)
+			//console.log($.children)
 			$('span.domain').each(function (i, element) {
 				// Select the previous element
-				var a = $(this).prev();
-				var title = a.text();
-				var url = a.attr('href');
+				let a = $(this).prev();
+				let title = a.text();
+				let url = a.attr('href');
 				let pattern = new RegExp(/\/r\//)
 				if (pattern.test(url)) url = 'https://reddit.com' + url;
 				stuff.push( /*title + ' ' +*/ url);
@@ -48,14 +69,17 @@ scrapeSub = () => {
 			//map over the array of links and pass each into a link variable
 			stuff.map(link => {
 				if (link.includes('reddit.com')) {
+					grabReddit(link);
+				} else {
+					grabImage(link);
 				}
-				grabImage(link);
+				
 			})
 			//console.log(stuff);
 		}
 		stuff.map(url => request(url, function(err, response, html){
 			let $  = cheerio.load(html)
-		response.pipe(process.stdout).on('input', console.log(response))
+		//response.pipe(process.stdout).on('input', console.log(response))
 		})
 	)})
 };
