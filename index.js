@@ -2,6 +2,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const download = require('image-downloader');
+const CronJob = require('cron').CronJob;
 const fs = require('fs');
 const path = require('path');
 //for url storage
@@ -13,6 +14,21 @@ const currentLocation = __dirname;
 if (!fs.existsSync('images_scraped')) {
 	fs.mkdirSync('images_scraped');
 };
+
+
+const job = new CronJob('10 * * * * *', function() {
+	/*
+	 * Runs every weekday (Monday through Friday)
+	 * at 11:30:00 AM. It does not run on Saturday
+	 * or Sunday.
+	 */
+	}, function () {
+		scrapeAll();
+	  /* This function is executed when the job stops */
+	},
+	true, /* Start the job right now */
+	timeZone /* Time zone of this job. */
+  );
 
 const grabImage = (link) => {
 	console.log('this is a IMGUR LINK!', link);
@@ -164,17 +180,11 @@ const scrapeAll = () => {
 	return scrapeAllFunction;
 }
 
-scrapeAll();
 
+//run once every 12 hours
 
-//find out how to download images from i.reddit
+//post one picture to facebook every 10 minutes
 
-//conditional statement for if it's ireddit or imgur link
+//add unique identifier or image filename to a mongo database upon picture upload
 
-//download first 15 only using span index
-
-//run once every 24 hours
-
-//post to facebook every 15 minutes then delete picture
-
-//post the id of the
+//delete picture from folder
