@@ -63,8 +63,21 @@ const grabReddit = (link) => {
 		console.log('this is a REDDIT LINK!', link)
 		let $ = cheerio.load(html);
 		//sets img equal to div parent of image then goes to div below
-		let img = $('.media-preview-content');
-		console.log('!!!!!!!' + img + '!!!!!!!!');
+		let img = $('.media-preview-content').find('a').attr('href');
+		//console.log('!!!!!!!' + img + '!!!!!!!!');
+		const options = {
+			url: `${link}`,
+			dest: '/images_scraped/'
+		}
+		download.image(options)
+			.then(({
+				filename,
+				image
+			}) => {
+				console.log('Saving file to', filename)
+			}).catch((err) => {
+				console.log(err);
+			})
 	})
 }
 
