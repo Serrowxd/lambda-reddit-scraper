@@ -19,26 +19,31 @@ const download = (uri, filename, callback) => {
 
 const grabImage = (url) => {
 	request(url, function (error, response, html) {
-		if (!error && response.status == 200) {
+		//if (!error && response.status == 200) {
 			console.log('this is IMGUR LINK!', url);
-			let $ = cheerio.load(html);
-			let imgurImage
 			//we have to differentiate between imgur link, and imgur page
-		}
-	})
-}
+		})
+	}
+
+const grabImgurPage = (url) => [
+	request(url, function(error, response, html) {
+		//if (!error && response.status == 200) {
+			console.log('this is IMGUR PAGE LINKE!', url);
+			let $ = cheerio.load(html);
+		})
+]
 
 const grabReddit = (url) => {
 	request(url, function (error, response, html) {
-		if (!error && response.status == 200) {
+		//if (!error && response.status == 200) {
 			console.log('this is REDDIT LINK!',url)
 			let $ = cheerio.load(html);
 			//sets img equal to div parent of image then goes to div below
 			let img = $('.media-preview-content').next().attr('href');
 			
-		}
-	})
-}
+		})
+	}
+
 
 //need to remove index 0 of the array
 
@@ -70,8 +75,10 @@ scrapeSub = () => {
 			urlArray.map(link => {
 				if (link.includes('reddit.com')) {
 					grabReddit(link);
-				} else {
+				} else if (link.includes('.jpg' || '.png' || 'gif')) {
 					grabImage(link);
+				} else {
+					grabImgurPage(link);
 				}
 				
 			})
