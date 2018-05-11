@@ -2,10 +2,36 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const download = require('image-downloader');
+const chalkAnimation = require('chalk-animation');
 const CronJob = require('cron').CronJob;
 const fs = require('fs');
 const path = require('path');
+const express = require('express');
+const mongoose = require('mongoose');
+ const config = require('./config');
+ require('./models/picModel');
+
+mongoose.connect(config.mongoURI);
+const server = express();
+
 //for url storage
+
+const asciiIntro = console.log(`
+
+_____               
+/ _  /_   _  ___ ___ 
+\// /| | | |/ __/ __|
+ / //\ |_| | (_| (__ 
+/____/\__,_|\___\___|
+___       _   
+/ __\ ___ | |_ 
+/__\/// _ \| __|
+/ \/  \ (_) | |_ 
+\_____/\___/ \__|
+			   
+https://github.com/JaredRCooper
+`);
+
 let urlArray = [];
 //sets variable current location to the directory of index.js
 const currentLocation = __dirname;
@@ -15,20 +41,7 @@ if (!fs.existsSync('images_scraped')) {
 	fs.mkdirSync('images_scraped');
 };
 
-
-const job = new CronJob('10 * * * * *', function() {
-	/*
-	 * Runs every weekday (Monday through Friday)
-	 * at 11:30:00 AM. It does not run on Saturday
-	 * or Sunday.
-	 */
-	}, function () {
-		scrapeAll();
-	  /* This function is executed when the job stops */
-	},
-	true, /* Start the job right now */
-	timeZone /* Time zone of this job. */
-  );
+//npm module for timing and executing functions
 
 const grabImage = (link) => {
 	console.log('this is a IMGUR LINK!', link);
@@ -43,7 +56,7 @@ const grabImage = (link) => {
 		}) => {
 			console.log('Saving file to', filename)
 		}).catch((err) => {
-			console.log(err);
+			//console.log(err);
 		})
 
 }
@@ -65,7 +78,7 @@ const grabImgurPage = (link) => [
 			}) => {
 				console.log('Saving file to', filename)
 			}).catch((err) => {
-				console.log(err);
+				//console.log(err);
 			})
 	})
 ]
@@ -89,7 +102,7 @@ const grabReddit = (link) => {
 			}) => {
 				console.log('Saving file to', filename)
 			}).catch((err) => {
-				console.log(err);
+				//console.log(err);
 			})
 	})
 }
@@ -176,15 +189,26 @@ scrapeRDankMemes = () => {
 };
 
 const scrapeAll = () => {
-	let scrapeAllFunction = scrapeR4Chan() && scrapeRDankMemes();
+	let scrapeAllFunction = scrapeR4Chan();
 	return scrapeAllFunction;
-}
+};
+
+
+
+scrapeAll();
 
 
 //run once every 12 hours
 
 //post one picture to facebook every 10 minutes
 
-//add unique identifier or image filename to a mongo database upon picture upload
+//photo filename + url + title on reddit for Schema upon image upload
 
 //delete picture from folder
+
+//break down functions into different files for read ability
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  chalkAnimation.rainbow(`The server is running on port ${PORT}`);
+});
