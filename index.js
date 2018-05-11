@@ -9,9 +9,12 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
  const config = require('./config');
+ const picModel = require('./models/picModel');
  require('./models/picModel');
 
-mongoose.connect(config.mongoURI);
+mongoose.connect(config.mongoURI).then((res => {
+console.log('Connected to MongoDB');
+}))
 const server = express();
 
 //for url storage
@@ -39,7 +42,7 @@ const currentLocation = __dirname;
 //checks for a directory for saving images, if it doesn't exist it makes one.
 if (!fs.existsSync('images_scraped')) {
 	fs.mkdirSync('images_scraped');
-};
+}; 
 
 //npm module for timing and executing functions
 
@@ -55,6 +58,11 @@ const grabImage = (link) => {
 			image
 		}) => {
 			console.log('Saving file to', filename)
+			let downPic = new picModel({
+				url: img,
+				filename: filename 
+			});
+			downPic.save();
 		}).catch((err) => {
 			//console.log(err);
 		})
@@ -77,6 +85,12 @@ const grabImgurPage = (link) => [
 				image
 			}) => {
 				console.log('Saving file to', filename)
+				let downPic = new picModel({
+					url: img,
+					filename: filename 
+				});
+	
+				downPic.save();
 			}).catch((err) => {
 				//console.log(err);
 			})
@@ -101,6 +115,12 @@ const grabReddit = (link) => {
 				image
 			}) => {
 				console.log('Saving file to', filename)
+				let downPic = new picModel({
+					url: img,
+					filename: filename 
+				});
+	
+				downPic.save();
 			}).catch((err) => {
 				//console.log(err);
 			})
@@ -193,10 +213,7 @@ const scrapeAll = () => {
 	return scrapeAllFunction;
 };
 
-
-
 scrapeAll();
-
 
 //run once every 12 hours
 

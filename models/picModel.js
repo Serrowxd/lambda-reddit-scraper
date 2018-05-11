@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const picModelSchema = new Schema ({
-    title: {
-        type: String,
-        require: true,
-        unique: true
-    },
     url: {
         type: String,
         required: true,
@@ -20,3 +15,5 @@ const picModelSchema = new Schema ({
 });
 
 const picModel = mongoose.model('picModels', picModelSchema);
+
+module.exports = picModel;
