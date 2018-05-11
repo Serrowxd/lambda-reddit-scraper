@@ -8,12 +8,12 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
- const config = require('./config');
- const picModel = require('./models/picModel');
- require('./models/picModel');
+const config = require('./config');
+const picModel = require('./models/picModel');
+require('./models/picModel');
 
 mongoose.connect(config.mongoURI).then((res => {
-console.log('Connected to MongoDB');
+	console.log('Connected to MongoDB');
 }))
 const server = express();
 
@@ -42,7 +42,7 @@ const currentLocation = __dirname;
 //checks for a directory for saving images, if it doesn't exist it makes one.
 if (!fs.existsSync('images_scraped')) {
 	fs.mkdirSync('images_scraped');
-}; 
+};
 
 //npm module for timing and executing functions
 
@@ -60,7 +60,7 @@ const grabImage = (link) => {
 			console.log('Saving file to', filename)
 			let downPic = new picModel({
 				url: img,
-				filename: filename 
+				filename: filename
 			});
 			downPic.save();
 		}).catch((err) => {
@@ -87,9 +87,9 @@ const grabImgurPage = (link) => [
 				console.log('Saving file to', filename)
 				let downPic = new picModel({
 					url: img,
-					filename: filename 
+					filename: filename
 				});
-	
+
 				downPic.save();
 			}).catch((err) => {
 				//console.log(err);
@@ -117,9 +117,9 @@ const grabReddit = (link) => {
 				console.log('Saving file to', filename)
 				let downPic = new picModel({
 					url: img,
-					filename: filename 
+					filename: filename
 				});
-	
+
 				downPic.save();
 			}).catch((err) => {
 				//console.log(err);
@@ -227,5 +227,5 @@ scrapeAll();
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  chalkAnimation.rainbow(`The server is running on port ${PORT}`);
+	chalkAnimation.rainbow(`The server is running on port ${PORT}`);
 });
